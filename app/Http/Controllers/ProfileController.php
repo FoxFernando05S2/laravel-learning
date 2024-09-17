@@ -6,23 +6,25 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Profile\StoreProfileRequest;
 use App\Http\Requests\Profile\UpdateProfileRequest;
 use App\Models\Profile;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use App\Http\Resources\ProfileResource;
 
 class ProfileController extends Controller
 {
-    
     public function index(): JsonResponse
     {
-        $profiles = Profile::all();
-        return new JsonResponse($profiles);
+        $profiles = Profile::with(['user' => function($query){
+            $query->withTrashed();
+        }])->get(); // Cargar la relación 'user'
+        return new JsonResponse(ProfileResource::collection($profiles));
     }
 
     public function show(Profile $profile): JsonResponse
     {
-        return new JsonResponse($profile);
+        $profile->load('user'); // Cargar la relación 'user'
+        return new JsonResponse(new ProfileResource($profile));
     }
-
+    
     public function store(StoreProfileRequest $request): JsonResponse
     {
         Profile::create([
@@ -35,7 +37,6 @@ class ProfileController extends Controller
         ]);
         return new JsonResponse(['message' => 'Profile registered successfully']);
     }
-
     public function update(Profile $profile, UpdateProfileRequest $request): JsonResponse
     {
         $profile->update([
@@ -47,7 +48,6 @@ class ProfileController extends Controller
         ]);
         return new JsonResponse(['message' => 'Profile updated successfully']);
     }
-
     public function delete(Profile $profile): JsonResponse
     {
         $profile->delete();

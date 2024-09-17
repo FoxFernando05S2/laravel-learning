@@ -14,6 +14,10 @@ return [
     |
     */
 
+    'JWT' =>[
+        'key' => env('JWT_SECRET')
+    ],
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],

@@ -7,28 +7,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
     use HasFactory;
     use SoftDeletes;
     use Notifiable;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'email',
         'password',
     ];
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
 
      public function profile()
     {
@@ -52,4 +42,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function types(): BelongsToMany
+    {
+        return $this->belongsToMany(Type::class, 'type_users');
+    }
+
 }
