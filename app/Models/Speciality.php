@@ -15,4 +15,9 @@ class Speciality extends Model
         'name',
         'description',
     ];
+
+    public function users()
+    {
+        return $this->belongsTo(User::class,'speciality_users');
+    }
 }

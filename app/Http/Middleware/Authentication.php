@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class Authetication
+class Authentication
 {
     /**
      * Handle an incoming request.
@@ -26,7 +26,7 @@ class Authetication
         $user= User::find($decoded->sub);
         if(!$user)
             throw new Exception('Invalid Credentials', 401);
-
+        
         Auth::login($user);
         
         return $next($request);

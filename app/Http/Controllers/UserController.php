@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Models\User;
@@ -11,6 +13,14 @@ use App\Http\Resources\UserResource;
 
 class UserController extends Controller
 {
+
+    
+
+    public function __construct(private UserService $userService)
+    {
+        
+    }
+
     public function index(): JsonResponse
     {
         $profiles = User::all();
@@ -18,9 +28,9 @@ class UserController extends Controller
         return new JsonResponse(UserResource::collection($profiles));
     }
 
-    public function show(User $profile): JsonResponse
+    public function show(User $user): JsonResponse
     {
-        return new JsonResponse($profile);
+        return new JsonResponse(new UserResource($user));
     }
 
     public function store(StoreUserRequest $request): JsonResponse
@@ -46,5 +56,20 @@ class UserController extends Controller
     {
         $profile->delete();
         return new JsonResponse(['message' => 'Profile deleted successfully']);
+    }
+
+    public function assignSpeciality(Request $request): JsonResponse
+    {
+        $user = User::find($request->user_id);
+        $user->specialities()->attach($request->speciality_id);
+
+        return new JsonResponse(['message' => 'Type assigned successfully']);
+    }
+
+    public function assignBlock(Request $request): JsonResponse
+    {
+        $user = User::find($request->user_id);
+
+        return $this->userService->assignBlockToUser($user, $request->block_id);
     }
 }

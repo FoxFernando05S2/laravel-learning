@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('blocks', function (Blueprint $table) {
+
+        Schema::create('block_classrooms', function (Blueprint $table) {
             $table->id();
-            $table->string('schedule');
+            $table->foreignId('block_id')->constrained('blocks');
+            $table->foreignId('classroom_id')->constrained('classrooms');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('blocks');
+        Schema::dropIfExists('block_classrooms');
     }
 };

@@ -3,9 +3,11 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class CheckUserType
 {
@@ -36,14 +38,58 @@ class CheckUserType
     //     return $next($request);
     // }
 
-    public function handle($request, Closure $next, ...$types)
-    {
-        $user = $request->user();
+    // public function handle(Request $request, Closure $next, ...$types)
+    // {
+    //     $user = Auth::user(); // Obtener el usuario autenticado
 
-        if (!$user || !$user->types()->whereIn('name', $types)->exists()) 
-        {
-            return response()->json(['message' => 'Unauthorized'], 403);
-            }
+    //     // Verifica si el usuario tiene al menos uno de los tipos requeridos
+    //     $userTypes = $user->types->pluck('name')->toArray(); // Asegúrate de que 'name' sea el campo adecuado
+
+    //     foreach ($types as $type) {
+    //         if (in_array($type, $userTypes)) {
+    //             return $next($request);
+    //         }
+    //     }
+
+    //     
+    //     return response()->json(['message' => 'Unauthorized'], 403);
+    // }
+
+    
+
+        // if (!$user->types()->where('name', $type)->exists()) {
+        //     // return response()->json(['message' => "Unauthorized. User does not have the required type: $type"], 403);
+        //     return new JsonResponse(['message' => "Unauthorized. User does not have the required type: $type"], 403);
+        // }
+
+        // $hasType = $user->types()->where('name', $type)->exists();
+
+        // if (!$hasType) {
+        //     return new JsonResponse(['message' => "Unauthorized. User does not have the required type: $type"], 403);
+        // }
+
+        // return $next($request);
+
+    public function handle(Request $request, Closure $next, string $type)
+    {
+        
+        $user = $request->user();
+        
+        if (!$user) {
+            return new JsonResponse(['message' => 'Unauthenticated.'], 401);
+        }
+        // dd($type);
+
+        $userType = $user->types()->pluck('name')->first(); 
+        // dd($userType);
+
+        // if (!$userType) {
+        //     return new JsonResponse(['message' => 'User has no type assigned.'], 403);
+        // }
+
+        if ($userType !== $type) {
+            return new JsonResponse(['message' => 'No tienes permiso para realizar esta acción.'], 403);
+        }
 
         return $next($request);
     }

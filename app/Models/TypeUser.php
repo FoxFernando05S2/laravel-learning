@@ -16,7 +16,7 @@ class TypeUser extends Model
         'type_id',
     ];
 
-    public function user()
+    public function users()
     {
         return $this->belongsTo(User::class);
     }
@@ -25,7 +25,7 @@ class TypeUser extends Model
     protected $table = 'type_users';
     
 
-    public function type()
+    public function types()
     {
         return $this->belongsTo(Type::class);
     }

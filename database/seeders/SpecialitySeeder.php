@@ -13,14 +13,17 @@ class SpecialitySeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    // public function run(): void
-    // {
+    public function run(): void
+    {
 
-    //     $Speciality = SpecialityEnum::cases(); 
-    //     foreach ($Speciality as $Specialities => $value) {
-    //         Speciality
-    //     }
-    //     Speciality::create(['name' => 'Matematica', 'description' => 'AlgebrA']);
-    //     Speciality::create(['name' => 'Ingles', 'description' => 'III']);
-    // }
+        $Speciality = SpecialityEnum::cases(); 
+        
+        Speciality::create([
+            'name' => 'Matematica', 
+            'description' => 'AlgebrA']);
+            
+        Speciality::create([
+            'name' => 'Ingles', 
+            'description' => 'III']);
+    }
 }

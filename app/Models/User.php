@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\Type;
 
 class User extends Authenticatable
 {
@@ -23,6 +24,16 @@ class User extends Authenticatable
      public function profile()
     {
         return $this->hasOne(Profile::class);
+    }
+
+    public function specialities()
+    {
+        return $this->belongsToMany(Speciality::class,'speciality_users');
+    }
+
+    public function blocks()
+    {
+        return $this->belongsToMany(Block::class,'block_users');
     }
     
     protected $hidden = [
@@ -48,4 +59,13 @@ class User extends Authenticatable
         return $this->belongsToMany(Type::class, 'type_users');
     }
 
+    
+
+    // public function types(): BelongsToMany
+    // {
+    //     return $this->belongsToMany(Type::class);
+    // }
+
 }
+
+

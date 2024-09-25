@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Block extends Model
 {
@@ -12,12 +13,15 @@ class Block extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'classroom_id',
         'schedule',
     ];
 
-    public function classroom()
+    public function users()
     {
-        return $this->belongsTo(Classroom::class);
+        return $this->belongsToMany(User::class, 'block_users');
+    }
+    public function classroom(): BelongsToMany
+    {
+        return $this->belongsToMany(Classroom::class, 'block_classrooms');
     }
 }
