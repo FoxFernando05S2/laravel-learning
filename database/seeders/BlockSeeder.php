@@ -18,11 +18,11 @@ class BlockSeeder extends Seeder
         // $Speciality = SpecialityEnum::cases(); 
         
         Block::create([
-            'schedule' => '19/08 - 08/12'
+            'capacity' => '20'
         ]);
 
         Block::create([
-            'schedule' => '15/07 - 28/11'
+            'capacity' => '20'
         ]);
     }
 }

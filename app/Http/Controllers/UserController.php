@@ -24,7 +24,6 @@ class UserController extends Controller
     public function index(): JsonResponse
     {
         $profiles = User::all();
-        
         return new JsonResponse(UserResource::collection($profiles));
     }
 

@@ -22,5 +22,9 @@ class TypeSeeder extends Seeder
         Type::create([
             'name' => 'profesor', 
             'description' => 'encargado']);
+        
+        Type::create([
+            'name' => 'administrador', 
+            'description' => 'jefe']);
     }
 }

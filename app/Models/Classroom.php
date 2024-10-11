@@ -14,7 +14,6 @@ class Classroom extends Model
 
     protected $fillable =[
         'name',
-        'capacity',
     ];
     
     public function block(): BelongsToMany

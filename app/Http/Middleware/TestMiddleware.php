@@ -20,8 +20,8 @@ class TestMiddleware
         // }
         
         $userId = Auth::user();
-        dd($userId);
         
+
         $profile = $request->route('profile');
 
         if($profile->age<18){

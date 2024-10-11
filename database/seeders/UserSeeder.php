@@ -19,12 +19,32 @@ class UserSeeder extends Seeder
         ]);
 
         User::create([
-            'email'=>'fernando@hotmail', 
+            'email'=>'Roy@gmail.com', 
             'password'=>'123456'
         ]);
 
         User::create([
-            'email'=>'fernando@hotmaillllll', 
+            'email'=>'Lazaro@senati.pe', 
+            'password'=>'123456'
+        ]);
+
+        User::create([
+            'email'=>'Marcos@ezhotel.com', 
+            'password'=>'123456'
+        ]);
+
+        User::create([
+            'email'=>'Henry@ezhotel.com', 
+            'password'=>'123456'
+        ]);
+
+        User::create([
+            'email'=>'Luis@ezhotel.com', 
+            'password'=>'123456'
+        ]);
+
+        User::create([
+            'email'=>'Diego@ezhotel.com', 
             'password'=>'123456'
         ]);
     }

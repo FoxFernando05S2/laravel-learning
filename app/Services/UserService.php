@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Models\Block;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 
 // class UserService
@@ -33,164 +34,60 @@ use Illuminate\Http\JsonResponse;
 
 
 
-
-
-
-
-
-
-
-
-// class UserService
-// {
-//     // Validación y asignación de bloque
-//     public function assignBlockToUser(User $user, int $blockId): JsonResponse
-//     {
-//         // Validar si el bloque existe
-//         $block = $this->findBlock($blockId);
-//         if ($block instanceof JsonResponse) {
-//             return $block;
-//         }
-
-//         // Validar si el bloque tiene capacidad disponible en su clase
-//         $classroomCapacity = $this->validateClassroomCapacity($block);
-//         if ($classroomCapacity instanceof JsonResponse) {
-//             return $classroomCapacity;
-//         }
-
-//         // Validar si el usuario ya está asignado a un bloque
-//         $currentBlock = $user->blocks()->first();
-//         if ($currentBlock) {
-//             // Si ya está asignado al mismo bloque, devolver error
-//             if ($currentBlock->id === $blockId) {
-//                 return new JsonResponse(['message' => 'The user is already assigned to this block.'], 400);
-//             }
-
-//             // Si está asignado a otro bloque, renovar la asignación
-//             $user->blocks()->sync([$blockId]);
-//             return new JsonResponse(['message' => 'Block allocation successfully renewed']);
-//         }
-
-//         // Si el usuario no está asignado a ningún bloque, proceder con la asignación
-//         $user->blocks()->attach($blockId);
-//         return new JsonResponse(['message' => 'Block assigned successfully']);
-//     }
-
-//     // Método para encontrar el bloque y devolver error si no existe
-//     private function findBlock(int $blockId)
-//     {
-//         $block = Block::find($blockId);
-//         if (!$block) {
-//             return new JsonResponse(['message' => 'Block not found.'], 404);
-//         }
-
-//         return $block;
-//     }
-
-//     // Validar si el bloque pertenece a un salón que tiene capacidad disponible
-//     private function validateClassroomCapacity(Block $block): ?JsonResponse
-//     {
-//         $classroom = $block->classroom;
-
-//         // Obtener el número de usuarios asignados al salón
-//         $assignedUsersCount = $classroom->users()->count();
-
-//         // Validar si la capacidad del salón ya fue alcanzada
-//         if ($assignedUsersCount >= $classroom->capacity) {
-//             return new JsonResponse(['message' => 'Classroom capacity exceeded.'], 400);
-//         }
-
-//         return null;
-//     }
-
-
-
 class UserService
 {
-    // Validación y asignación de bloque
+    
     public function assignBlockToUser(User $user, int $blockId): JsonResponse
-    {
-        // Validar si el bloque existe
-        $block = $this->findBlock($blockId);
-        
+    {   
+        $block = $this->findBlock($blockId);    
 
         if ($block instanceof JsonResponse) {
-            return $block; // Devolver respuesta de error si no se encuentra el bloque
+            return $block; 
         }
-
-        // Validar si el bloque tiene capacidad disponible en su clase
+       
         $classroomCapacity = $this->validateClassroomCapacity($block);
         if ($classroomCapacity instanceof JsonResponse) {
-            return $classroomCapacity; // Devolver respuesta de error si la capacidad está excedida
+            return $classroomCapacity; 
         }
-
-        // Validar si el usuario ya está asignado a un bloque
+         
         $currentBlock = $user->blocks()->first();
-        if ($currentBlock) {
-            // Si ya está asignado al mismo bloque, devolver error
+        if ($currentBlock) {        
             if ($currentBlock->id === $blockId) {
                 return new JsonResponse(['message' => 'The user is already assigned to this block.'], 400);
             }
-
-            // Si está asignado a otro bloque, renovar la asignación
             $user->blocks()->sync([$blockId]);
             return new JsonResponse(['message' => 'Block allocation successfully renewed']);
         }
-
-        // Si el usuario no está asignado a ningún bloque, proceder con la asignación
         $user->blocks()->attach($blockId);
         return new JsonResponse(['message' => 'Block assigned successfully']);
     }
 
-    // Método para encontrar el bloque y devolver error si no existe
     private function findBlock(int $blockId)
     {
         $block = Block::find($blockId);
         if (!$block) {
             return new JsonResponse(['message' => 'Block not found.'], 404);
         }
-
-        return $block; // Devuelve el bloque encontrado
+        return $block;
     }
-
 
     private function validateClassroomCapacity(Block $block): ?JsonResponse
     {
-        $classroom = $block->classroom; // Asegúrate de que la relación `classroom` está bien definida
-
-        // Obtener el número de usuarios asignados al salón
-        $assignedUsersCount = $classroom->users()->count();
-
-        // Validar si la capacidad del salón ya fue alcanzada
-        if ($assignedUsersCount >= $classroom->capacity) {
-            return new JsonResponse(['message' => 'Classroom capacity exceeded.'], 400);
+        $classrooms = $block->classrooms;
+       
+        foreach ($classrooms as $classroom) {   
+            $capacity = $classroom->capacity;
+            $assignedUsersCount = User::whereHas('blocks', function ($query) use ($block, $classroom) {
+                $query->where('block_id', $block->id)
+                      ->whereHas('classrooms', function ($subQuery) use ($classroom) {
+                          $subQuery->where('classroom_id', $classroom->id);
+                      });
+            })->count();
+     
+            if ($assignedUsersCount >= $capacity) {
+                return new JsonResponse(['message' => 'Classroom capacity exceeded.'], 400);
+            }
         }
-        
-        return null; // No se devuelve error si la capacidad es suficiente
+        return null; 
     }
-
-    // private function validateClassroomCapacity(Block $block): ?JsonResponse
-    // {
-    //     $classrooms = $block->classrooms; // Obtener aulas asociadas
-    
-    //     if ($classrooms->isEmpty()) {
-    //         return new JsonResponse(['message' => 'No classrooms associated with this block.'], 400);
-    //     }
-    
-    //     // Suponiendo que solo estás usando el primer aula
-    //     $classroom = $classrooms->first();
-    
-    //     // Obtener el número de usuarios asignados al salón
-    //     $assignedUsersCount = $classroom->users()->count();
-    
-    //     // Validar si la capacidad del salón ya fue alcanzada
-    //     if ($assignedUsersCount >= $classroom->capacity) {
-    //         return new JsonResponse(['message' => 'Classroom capacity exceeded.'], 400);
-    //     }
-    
-    //     return null; // No se devuelve error si la capacidad es suficiente
-    // }
-    
-        
-
 }

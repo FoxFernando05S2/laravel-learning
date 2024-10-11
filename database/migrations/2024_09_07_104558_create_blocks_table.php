@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('blocks', function (Blueprint $table) {
             $table->id();
-            $table->string('schedule');
+            $table->integer('capacity');
             $table->timestamps();
             $table->softDeletes();
         });

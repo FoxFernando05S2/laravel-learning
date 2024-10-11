@@ -17,17 +17,17 @@ class TypeUserController extends Controller
         return new JsonResponse(['message' => 'Tipos asignados al usuario con éxito.']);
     }
 
-    // Obtener tipos de usuario
+   
     public function getUserTypes(User $user): JsonResponse
     {
-        $types = $user->types()->get(); // Obtener tipos asignados a un usuario
+        $types = $user->types()->get(); 
         return new JsonResponse($types);
     }
 
-    // Eliminar un tipo de usuario
+    
     public function removeTypeFromUser(User $user, Type $type): JsonResponse
     {
-        $user->types()->detach($type->id); // Eliminar la relación de un tipo específico
+        $user->types()->detach($type->id); 
         return new JsonResponse(['message' => 'Tipo de usuario eliminado.']);
     }
 }

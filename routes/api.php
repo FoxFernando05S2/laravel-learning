@@ -13,6 +13,10 @@ use App\Http\Controllers\TypeUserController;
 use App\Http\Middleware\Authentication;
 use App\Models\Speciality;
 use Illuminate\Support\Facades\Auth;
+use Src\User\Infrastructure\Controller\UserController as ControllerUserController;
+use Src\Profile\Infrastructure\Controller\ProfileController as ControllerProfileController;
+use Src\Block\Infrastructure\Controller\BlockController as ControllerBlockController ;
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -39,8 +43,8 @@ Route::group([
     'controller' => UserController::class,
 ], static function () {
     Route::get('/', 'index'); //->middleware('checkType:alumno,profesor')
-    Route::get('/{user}', 'show')->middleware(CheckUserType::class . ':' . SpecialityEnum::STUDENT->value); 
-    Route::post('/', 'store')->middleware(CheckUserType::class.':profesor');
+    Route::get('/{user}', 'show')->middleware(CheckUserType::class . ':' . SpecialityEnum::TEACHER->value); 
+    Route::post('/', 'store')->middleware(CheckUserType::class . ':' . SpecialityEnum::TEACHER->value);
 });
 
 Route::group([
@@ -69,4 +73,38 @@ Route::group([
     'controller' => UserController::class,
 ], routes: static function () {
     Route::post('/blocks', 'assignBlock')->middleware(CheckUserType::class . ':' . SpecialityEnum::TEACHER->value);
+});
+
+
+
+
+
+Route::group([
+    'prefix' => 'users',
+    'controller' => ControllerUserController::class,
+], routes: static function () {
+    Route::get('/', 'index');
+});
+
+Route::group([
+    'prefix' => 'profiles',
+    'controller' => ControllerProfileController::class,
+], routes: static function(){
+    route::get('/', 'index');
+    Route::post('/', 'store');
+});
+
+// Route::group([
+//     'prefix' => 'blocks',
+//     'controller' => ControllerBlockController::class,
+// ], function () {
+//     Route::post('/assign', 'assignBlock');
+//     // Route::post('/', 'store');
+// });
+
+Route::group([
+    'prefix' => 'blocks',
+    'controller' => ControllerBlockController::class,
+], function () {
+    Route::post('/assign', 'assignBlock'); // Ruta para asignar bloque
 });

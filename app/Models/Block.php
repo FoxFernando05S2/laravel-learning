@@ -13,14 +13,14 @@ class Block extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'schedule',
+        'capacity',
     ];
 
     public function users()
     {
         return $this->belongsToMany(User::class, 'block_users');
     }
-    public function classroom(): BelongsToMany
+    public function classrooms(): BelongsToMany
     {
         return $this->belongsToMany(Classroom::class, 'block_classrooms');
     }

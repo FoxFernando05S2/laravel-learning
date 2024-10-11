@@ -16,11 +16,10 @@ class ClassroomSeeder extends Seeder
         
         Classroom::create([
             'name' => '500-C', 
-            'capacity' => '20']);
+        ]);
 
         Classroom::create([
-            'name' => '200-B', 
-            'capacity' => '30'
+            'name' => '200-B',
         ]);
 
     }
