@@ -9,17 +9,12 @@ use Src\Block\Domain\Model\Block;
 
 interface BlockRepositoryInterface
 {
-    
     // public function getAll(): array;
+
     // // public function getById(int $id): ?User;
-    // public function register(string $name, int $capacity): void;
 
     public function findBlockById(int $blockId): ?Block;
-
     public function assignUserToBlock(User $user, Block $block): void;
-
     public function isUserAssignedToBlock(User $user, Block $block): bool;
-
     public function checkBlockCapacity(Block $block): bool;
-
 }

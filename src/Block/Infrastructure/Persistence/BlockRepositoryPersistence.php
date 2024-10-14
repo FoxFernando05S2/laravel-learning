@@ -4,13 +4,6 @@ declare(strict_types=1);
 
 namespace Src\Block\Infrastructure\Persistence;
 
-use App\Models\Block as AppBlock;
-use App\Models\User as AppUser;
-use Src\Shared\Domain\Exception\BlockCapacityExceededException;
-use Src\Shared\Domain\Exception\UserNotFoundException;
-use Src\Shared\Domain\Exception\BlockNotFoundException;
-use Src\Shared\Domain\Exception\UserAlreadyAssignedToBlockException;
-
 
 use App\Models\User as EloquentUser;
 use App\Models\Block as EloquentBlock;

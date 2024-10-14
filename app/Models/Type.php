@@ -32,4 +32,6 @@ class Type extends Model
     {
         return $this->belongsToMany(User::class, 'type_users');
     }
+
+    
 }

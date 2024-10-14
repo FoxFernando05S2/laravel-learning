@@ -16,7 +16,11 @@ use Illuminate\Support\Facades\Auth;
 use Src\User\Infrastructure\Controller\UserController as ControllerUserController;
 use Src\Profile\Infrastructure\Controller\ProfileController as ControllerProfileController;
 use Src\Block\Infrastructure\Controller\BlockController as ControllerBlockController ;
+use Src\Type\Infrastructure\Controller\TypeController as ControllerTypeController;
 
+
+use App\Http\Controllers\PostPhotoController;
+use App\Http\Controllers\UserImageController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -106,5 +110,22 @@ Route::group([
     'prefix' => 'blocks',
     'controller' => ControllerBlockController::class,
 ], function () {
-    Route::post('/assign', 'assignBlock'); // Ruta para asignar bloque
+    Route::post('/assign', 'assignBlock');
+});
+
+
+Route::group([
+    'prefix' => 'types',
+    'controller' => ControllerTypeController::class,
+], function () {
+    Route::post('/assign', 'assignType');
+});
+
+Route::group([
+    'prefix' => 'image',
+    'controller' => UserImageController::class,
+], function () {
+    Route::post('/{user}', 'save');
+    Route::get('/{user}', 'getUserImage');
+    Route::post('/{user}/base64', 'saveBase64');
 });

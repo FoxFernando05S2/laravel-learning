@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace Src\Block\Infrastructure\Controller;
 
-
-use Illuminate\Routing\Controller;
-use Src\Block\Application\UseCase\GetBlocks;
-
-
 use Illuminate\Http\Request;
 use Src\Block\Application\UseCase\RegisterBlock;
 use Src\Block\Application\DTO\UserBlockRequest;
@@ -33,13 +28,10 @@ class BlockController
             return new JsonResponse(['message' => 'User not found.'], 404);
         }
 
-        
         $user = new User($eloquentUser->id, $eloquentUser->email);
 
-        
         $userBlockRequest = new UserBlockRequest($request->input('user_id'), $request->input('block_id'));
 
-        
         return $this->registerBlockUseCase->execute($userBlockRequest, $user);
     }
 
